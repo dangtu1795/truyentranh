@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource"></script>
+    <script src="javascripts/jquery-3.3.1.min.js"></script>
+
+    <title>Truyen Tranh</title>
+</head>
+<body>
+
+<h1>Truyen tranh tuan</h1>
+<ul id="app" v-if="show">
+    <h2>list of comics:</h2>
+    <ol>
+        <li v-for="comic in comics" @click="showChapter(comic)"> {{comic.name}}</li>
+    </ol>
+</ul>
+
+<ul id="chapter" v-if="show">
+    <h2>list of chapter:</h2>
+    <ol>
+        <li v-for="chapter in chapters" @click="readChapter(chapter)"> {{chapter.name}}</li>
+    </ol>
+</ul>
+
+<ul id="chapter-detail" v-if="show">
+    <h2>Read Chapter: </h2>
+    <img v-for="url in links" :src="url">
+
+</ul>
+
+
+<script>
+
+    var chapterDetail = new Vue({
+        el: '#chapter-detail',
+        data: {
+            show: false,
+            links: {}
+        },
+    });
+
+    var chapter = new Vue({
+        el: '#chapter',
+        data: {
+            chapters: {},
+            show: false
+        },
+        methods: {
+            readChapter: function (chapter) {
+                console.log(chapter.handle);
+                this.$http.get(`/comic/chapter/${chapter.handle}`).then(response=>{
+                    chapterDetail.show = true;
+                    chapterDetail.links = response.body.data;
+                    console.log(response.body.data);
+                    this.show = false;
+                })
+            }
+        }
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            comics: {},
+            show: true
+        },
+        methods: {
+            getcomic: function () {
+                this.$http.get('/comic').then(response => {
+                    if (response.body.code == 0) {
+                        return this.comics = response.body.data;
+                    }
+                }, response => {
+                    console.log('error')
+                });
+            },
+            showChapter: function (comic) {
+                console.log(comic.handle);
+                this.$http.get(`/comic/${comic.handle}`).then(response => {
+                    chapter.chapters = response.body.data;
+                    console.log('data url is: ',response.body.data);
+                    chapter.show = true;
+                    this.show = false;
+                }, response => {
+                    console.log('error')
+                })
+            }
+        }
+    });
+    app.getcomic();
+
+</script>
+</body>
+</html>
