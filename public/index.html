@@ -21,7 +21,11 @@
     <ol id="app" v-if="show">
         <h2 >List of comics:</h2 >
         <ul >
-            <li v-for="comic in comics" @click="showChapter(comic)"><em> {{comic.name}}</em></li>
+            <li class="comic" v-for="comic in comics"  style="cursor: pointer;padding-bottom: 15px" @click="showChapter(comic)">
+                <a style="text-decoration: none; display: inline-block; width: 300px"> {{comic.name}}</a>
+                <div style="display: inline-block; width: 200px;">Update at: <span class="text-warning">{{comic.date}}</span></div>
+                <div style="display: inline-block">Lasted chap: <span class="text-danger">{{comic.chapter}}</span></div>
+            </li>
         </ul>
     </ol>
 
@@ -29,13 +33,15 @@
         <h2 style="display: inline-block;">List of chapter:</h2 >
         <button style="display: inline-block;" class="btn btn-primary pull-right" @click="back()">Back to List of comics</button>
         <ul style="list-style: none">
-            <li v-for="chapter in chapters" @click="readChapter(chapter)"> {{chapter.name}}</li>
+            <li class="text-info" style="cursor: pointer;padding-bottom: 15px" v-for="chapter in chapters" @click="readChapter(chapter)"> {{chapter.name}}</li>
         </ul>
     </ul>
 
     <ul id="chapter-detail" v-if="show">
         <h2 style="display: inline-block">Read Chapter: </h2> <button style="display: inline-block" class="btn btn-primary pull-right" @click="back()"> Back to list of chapter</button>
-        <img v-for="url in links" :src="url">
+        <div>
+            <img class="img-reponsive img-thumbnail" v-for="url in links" :src="url">
+        </div>
 
     </ul>
 </div>
@@ -90,6 +96,7 @@
             getcomic: function () {
                 this.$http.get('/comic').then(response => {
                     if (response.body.code == 0) {
+                        console.log(response.body.data);
                         return this.comics = response.body.data;
                     }
                 }, response => {
