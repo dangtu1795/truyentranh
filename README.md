@@ -1,6 +1,6 @@
 # Truyen tranh 
 
-data form truyentranhtuan.com
+data from truyentranhtuan.com
 
 ## Getting Started
 
