@@ -9,30 +9,36 @@
     <script src="https://cdn.jsdelivr.net/npm/vue-resource"></script>
     <script src="javascripts/jquery-3.3.1.min.js"></script>
 
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <title>Truyen Tranh</title>
 </head>
 <body>
 
-<h1>Truyen tranh tuan</h1>
-<ul id="app" v-if="show">
-    <h2>list of comics:</h2>
-    <ol>
-        <li v-for="comic in comics" @click="showChapter(comic)"> {{comic.name}}</li>
+<div class="container">
+    <h1>Truyen tranh tuan</h1>
+    <ol id="app" v-if="show">
+        <h2 >List of comics:</h2 >
+        <ul >
+            <li v-for="comic in comics" @click="showChapter(comic)"><em> {{comic.name}}</em></li>
+        </ul>
     </ol>
-</ul>
 
-<ul id="chapter" v-if="show">
-    <h2>list of chapter:</h2>
-    <ol>
-        <li v-for="chapter in chapters" @click="readChapter(chapter)"> {{chapter.name}}</li>
-    </ol>
-</ul>
+    <ul id="chapter" v-if="show">
+        <h2 style="display: inline-block;">List of chapter:</h2 >
+        <button style="display: inline-block;" class="btn btn-primary pull-right" @click="back()">Back to List of comics</button>
+        <ul style="list-style: none">
+            <li v-for="chapter in chapters" @click="readChapter(chapter)"> {{chapter.name}}</li>
+        </ul>
+    </ul>
 
-<ul id="chapter-detail" v-if="show">
-    <h2>Read Chapter: </h2>
-    <img v-for="url in links" :src="url">
+    <ul id="chapter-detail" v-if="show">
+        <h2 style="display: inline-block">Read Chapter: </h2> <button style="display: inline-block" class="btn btn-primary pull-right" @click="back()"> Back to list of chapter</button>
+        <img v-for="url in links" :src="url">
 
-</ul>
+    </ul>
+</div>
 
 
 <script>
@@ -43,6 +49,12 @@
             show: false,
             links: {}
         },
+        methods: {
+            back:function () {
+                this.show= false;
+                chapter.show = true;
+            }
+        }
     });
 
     var chapter = new Vue({
@@ -60,6 +72,10 @@
                     console.log(response.body.data);
                     this.show = false;
                 })
+            },
+            back: function () {
+                this.show = false;
+                app.show = true;
             }
         }
     });
